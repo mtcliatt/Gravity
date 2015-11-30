@@ -25,6 +25,8 @@ function GPointerLockControls (camera, gravity, speed) {
   
   self.canShift = true;
   self.canJump = true;
+  self.turning = false;
+  
   self.setGravity(gravity);
   
   self.velocity = new THREE.Vector3();
@@ -70,14 +72,39 @@ GPointerLockControls.prototype.update = function(delta, objects) {
     return;
   }
   
-  self._updateDisable(objects);
-  self._updateVelocity(delta);
-  self._updateGravity(delta, objects);
+  if(self.turning) {
+    self._updateTurn(delta);
+  } else {
+    self._updateDisable(objects);
+    self._updateVelocity(delta);
+    self._updateGravity(delta, objects);
   
-  // translate camera
-  self.yawObject.translateX(self.velocity.x * delta);
-  self.yawObject.translateZ(self.velocity.z * delta);
-  self.yawObject.translateY(self.velocity.y * delta);
+    // translate camera
+    self.yawObject.translateX(self.velocity.x * delta);
+    self.yawObject.translateZ(self.velocity.z * delta);
+    self.yawObject.translateY(self.velocity.y * delta);
+  }
+};
+
+GPointerLockControls.prototype._updateTurn = function(delta) {
+  var self = this;
+  
+  var dz = delta * Math.PI;
+  if(self.yawObject.rotation.z < self.gravity.rotation) {
+    if(self.yawObject.rotation.z + dz > self.gravity.rotation) {
+      self.yawObject.rotation.z = self.gravity.rotation;
+    } else {
+      self.yawObject.rotation.z += dz;
+    }
+  } else if(self.yawObject.rotation.z > self.gravity.rotation) {
+    if(self.yawObject.rotation.z - dz < self.gravity.rotation) {
+      self.yawObject.rotation.z = self.gravity.rotation;
+    } else {
+      self.yawObject.rotation.z -= dz;
+    }
+  } else {
+    self.turning = false;
+  }
 };
 
 /**
@@ -249,14 +276,16 @@ GPointerLockControls.prototype.setGravity = function(gravity) {
     self.yawObject.rotation.set(0, 0, 0);
     self.pitchObject.rotation.set(0, 0, 0);
     
-    self.yawObject.rotation.z = 
-      self.gravity.rotation;
+    //self.yawObject.rotation.z = 
+    //  self.gravity.rotation;
     
     self.yawObject.rotation[self.gravity.gravity.axis] = yaw;
       
     var vec = new THREE.Vector3(0, 0, 0);
     vec[self.gravity.gravity.axis] = self.gravity.gravity.mult;
     self.raycaster = new THREE.Raycaster(new THREE.Vector3(0, 0, 0), vec);
+    
+    self.turning = true;
   }
   
   self.canShift = false;
