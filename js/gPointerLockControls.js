@@ -136,8 +136,30 @@ GPointerLockControls.prototype._updateDisable = function(objects) {
     var raycaster = new THREE.Raycaster(self.yawObject.position,
                                         dir, 0, epsilon);
     
-    var intersects = raycaster.intersectObjects(objects).length;
-    if(intersects) {
+    var intersects = raycaster.intersectObjects(objects);
+    if(intersects.length) {
+      var distance = intersects[0].distance;
+      
+      if(distance <3 /*you*/) {
+        var d = 3 - distance;
+        
+        if(affected[i] === 'forward') {
+          self.yawObject.translateZ(d);
+        }
+        
+        if(affected[i] === 'backward') {
+          self.yawObject.translateZ(-d);
+        }
+        
+        if(affected[i] === 'left') {
+          self.yawObject.translateX(d);
+        }
+        
+        if(affected[i] === 'right') {
+          self.yawObject.translateX(-d);
+        }
+      }
+      
       disable(affected[i]);
     }
   }
