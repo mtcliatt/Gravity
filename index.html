@@ -97,7 +97,7 @@
 					element.requestPointerLock();
 				}
 
-        		animate();
+    			animate();
 			}, false );
 
 
@@ -114,14 +114,13 @@
 			var prevTime = 0;
 			var velocity = new THREE.Vector3();
 
-
 	      var level;
 		  function init() {
 			camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
 			altCam = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
 			altCam.position.set( 0, 0, -100 );
 
-			altControls = new THREE.OrbitControls(altCam);
+			//altControls = new THREE.OrbitControls(altCam);
 
 	        scene = new THREE.Scene();
 
@@ -180,6 +179,7 @@
 	            document.getElementById('info-face').innerHTML = face;
 	          }
 	        });
+
 
 				renderer = new THREE.WebGLRenderer();
 				renderer.setClearColor( 0xffffff );

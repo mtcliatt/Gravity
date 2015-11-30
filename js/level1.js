@@ -1,12 +1,6 @@
 
 'use strict';
 
-/**
- * Creates an instance of Level
- * @constructor
- * @param {object} scene
- * @param {object} camera
- */
 
 function Platform(platform) {
     var self = this;
@@ -42,6 +36,8 @@ Platform.prototype._update = function() {
 
     var pos = self.object.position;
 
+    // console.log('At x=' + pos.x + ', can move to: ' + self.minX + '-' + self.maxX);
+
     if ( pos.x <= self.minX || pos.x >= self.maxX ) {
         self.xdir = self.xdir * -1; // Flip the sign bit.
     }
@@ -58,6 +54,12 @@ Platform.prototype._update = function() {
     self.object.position.z += self.speed * self.zdir;
 }
 
+/**
+ * Creates an instance of Level
+ * @constructor
+ * @param {object} scene
+ * @param {object} camera
+ */
 function Level(scene, camera) {
   var self = this;
 
@@ -67,6 +69,11 @@ function Level(scene, camera) {
   self.controls = new GPointerLockControls(camera, Gravity.DOWN, null);
 
   self.scene.add(self.controls.getObject());
+
+  var me = self.controls.getObject().position;
+  me.x = 200;
+  me.y = -100;
+  me.z = 200;
 
   self._initScene();
 
@@ -121,7 +128,7 @@ Level.prototype._generateObjects = function() {
 /**
  * Generates all regular platform objects for the Level
  * #_generatePlatforms
- * returns {array}
+ * @returns {array}
  */
 Level.prototype._generatePlatforms = function() {
   var self = this;
@@ -131,37 +138,246 @@ Level.prototype._generatePlatforms = function() {
   self.platforms = [];
   var loader = new THREE.TextureLoader();
 
-  var xs = [0, 0, 0];
-  var ys = [-200, -200, -200];
-  var zs = [-200, 200, 0];
+  var objs = [
+    {
+      x: -200,
+      y: -200,
+      z: 200,
+      width: 100,
+      height: 100,
+      depth: 100,
+      texture: 0,
+      minX: 0,
+      maxX: 0,
+      minY: 0,
+      maxY: 0,
+      minZ: 0,
+      maxZ: 0,
+      xdir: 0,
+      ydir: 0,
+      zdir: 0,
+      speed: 0
+    },
+    {
+      x: -100,
+      y: -200,
+      z: 200,
+      width: 100,
+      height: 100,
+      depth: 100,
+      texture: 0,
+      minX: 0,
+      maxX: 0,
+      minY: 0,
+      maxY: 0,
+      minZ: 0,
+      maxZ: 0,
+      xdir: 0,
+      ydir: 0,
+      zdir: 0,
+      speed: 0
+    },
+    {
+      x: 0,
+      y: -200,
+      z: 200,
+      width: 100,
+      height: 100,
+      depth: 100,
+      texture: 0,
+      minX: 0,
+      maxX: 0,
+      minY: 0,
+      maxY: 0,
+      minZ: 0,
+      maxZ: 0,
+      xdir: 0,
+      ydir: 0,
+      zdir: 0,
+      speed: 0
+    },
+    {
+      x: 100,
+      y: -200,
+      z: 200,
+      width: 100,
+      height: 100,
+      depth: 100,
+      texture: 0,
+      minX: 0,
+      maxX: 0,
+      minY: 0,
+      maxY: 0,
+      minZ: 0,
+      maxZ: 0,
+      xdir: 0,
+      ydir: 0,
+      zdir: 0,
+      speed: 0
+    },
+    {
+      x: 200,
+      y: -200,
+      z: 200,
+      width: 100,
+      height: 100,
+      depth: 100,
+      texture: 0,
+      minX: 0,
+      maxX: 0,
+      minY: 0,
+      maxY: 0,
+      minZ: 0,
+      maxZ: 0,
+      xdir: 0,
+      ydir: 0,
+      zdir: 0,
+      speed: 0
+    },
+    {
+      x: -200,
+      y: -200,
+      z: -200,
+      width: 100,
+      height: 100,
+      depth: 100,
+      texture: 0,
+      minX: 0,
+      maxX: 0,
+      minY: 0,
+      maxY: 0,
+      minZ: 0,
+      maxZ: 0,
+      xdir: 0,
+      ydir: 0,
+      zdir: 0,
+      speed: 0
+    },
+    {
+      x: 0,
+      y: 200,
+      z: 200,
+      width: 100,
+      height: 100,
+      depth: 100,
+      texture: 0,
+      minX: 0,
+      maxX: 0,
+      minY: 0,
+      maxY: 0,
+      minZ: 0,
+      maxZ: 0,
+      xdir: 0,
+      ydir: 0,
+      zdir: 0,
+      speed: 0
+    },
+    {
+      x: 0,
+      y: 200,
+      z: 100,
+      width: 100,
+      height: 100,
+      depth: 100,
+      texture: 0,
+      minX: 0,
+      maxX: 0,
+      minY: 0,
+      maxY: 0,
+      minZ: 0,
+      maxZ: 0,
+      xdir: 0,
+      ydir: 0,
+      zdir: 0,
+      speed: 0
+    },
+    {
+      x: 0,
+      y: 200,
+      z: 0,
+      width: 100,
+      height: 100,
+      depth: 100,
+      texture: 0,
+      minX: 0,
+      maxX: 0,
+      minY: 0,
+      maxY: 0,
+      minZ: 0,
+      maxZ: 0,
+      xdir: 0,
+      ydir: 0,
+      zdir: 0,
+      speed: 0
+    },
+    {
+      x: 0,
+      y: 200,
+      z: -100,
+      width: 100,
+      height: 100,
+      depth: 100,
+      texture: 0,
+      minX: 0,
+      maxX: 0,
+      minY: 0,
+      maxY: 0,
+      minZ: 0,
+      maxZ: 0,
+      xdir: 0,
+      ydir: 0,
+      zdir: 0,
+      speed: 0
+    },
+    {
+      x: 0,
+      y: 200,
+      z: -200,
+      width: 100,
+      height: 100,
+      depth: 100,
+      texture: 0,
+      minX: 0,
+      maxX: 0,
+      minY: 0,
+      maxY: 0,
+      minZ: 0,
+      maxZ: 0,
+      xdir: 0,
+      ydir: 0,
+      zdir: 0,
+      speed: 0
+    }
+  ];
 
-  var texture = loader.load('ftex.jpg');
+  var textures = [];
+  textures[0] = loader.load('ftex.jpg');
 
-  for(var i = 0; i < xs.length; i++) {
-    var geometry = new THREE.BoxGeometry(100, 100, 100);
-    var material = new THREE.MeshBasicMaterial({map: texture});
+  for(var i = 0; i < objs.length; i++) {
+    var geometry = new THREE.BoxGeometry(objs[i].width, objs[i].height, objs[i].depth);
+    var material = new THREE.MeshBasicMaterial({map: textures[objs[i].texture]});
     var mesh = new THREE.Mesh(geometry, material);
 
 
     var platform = {};
     platform.object = mesh;
 
-    platform.x = xs[i];
-    platform.y = ys[i];
-    platform.z = zs[i];
+    platform.x = objs[i].x;
+    platform.y = objs[i].y;
+    platform.z = objs[i].z;
 
-    platform.minX = -100;
-    platform.maxX = 100;
-    platform.minY = 0;
-    platform.maxY = 0;
-    platform.minZ = 0;
-    platform.maxZ = 0;
+    platform.minX = objs[i].minX;
+    platform.maxX = objs[i].maxX;
+    platform.minY = objs[i].minY;
+    platform.maxY = objs[i].maxY;
+    platform.minZ = objs[i].minZ;
+    platform.maxZ = objs[i].maxZ;
 
-    platform.xdir = 1;
-    platform.ydir = 0;
-    platform.zdir = 0;
+    platform.xdir = objs[i].xdir;
+    platform.ydir = objs[i].ydir;
+    platform.zdir = objs[i].zdir;
 
-    platform.speed = 1;
+    platform.speed = objs[i].speed;
 
     platform = new Platform(platform);
 
@@ -189,16 +405,37 @@ Level.prototype._generateSwitches = function() {
   self.switches = [];
   var loader = new THREE.TextureLoader();
 
-  var xs = [110, 130, 245, 170];
-  var ys = [-245, 245,-245, -245];
-  var zs = [-150, -150, -150, -150];
-  var rs = [0, Math.PI, Math.PI / 2, -Math.PI / 2];
-  var gs = [Gravity.LEFT, Gravity.RIGHT, Gravity.DOWN, Gravity.UP];
+  var objs = [
+    {
+      x: -200,
+      y: -145,
+      z: 200,
+      g: Gravity.UP
+    },
+    {
+      x: 200,
+      y: -245,
+      z: -200,
+      g: Gravity.UP
+    },
+    {
+      x: 200,
+      y: 245,
+      z: 200,
+      g: Gravity.DOWN
+    },
+    {
+      x: -200,
+      y: 245,
+      z: -200,
+      g: Gravity.DOWN
+    },
+  ];
 
   var texArrow = loader.load('arrow.jpg');
   var texCrate = loader.load('crate.jpg');
 
-  for(var i = 0; i < xs.length; i++) {
+  for(var i = 0; i < objs.length; i++) {
     var crateMaterial = new THREE.MeshBasicMaterial({
       map: texCrate
     });
@@ -215,12 +452,12 @@ Level.prototype._generateSwitches = function() {
 
     var mesh = new THREE.Mesh(geometry, material);
 
-    mesh.position.x = xs[i];
-    mesh.position.y = ys[i];
-    mesh.position.z = zs[i];
-    mesh.rotation.z = rs[i];
+    mesh.position.x = objs[i].x;
+    mesh.position.y = objs[i].y;
+    mesh.position.z = objs[i].z;
+    mesh.rotation.z = objs[i].g.cubeRotation;
 
-    mesh.gravity = gs[i];
+    mesh.gravity = objs[i].g;
 
     self.switches.push(mesh);
   }
@@ -301,9 +538,3 @@ Level.prototype._onKeyDown = function(event) {
     self.gravity = null;
   }
 };
-
-Level.prototype.getStatus = function() {
-    var self = this;
-
-
-}
