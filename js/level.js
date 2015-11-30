@@ -42,8 +42,6 @@ Platform.prototype._update = function() {
 
     var pos = self.object.position;
 
-    console.log('At x=' + pos.x + ', can move to: ' + self.minX + '-' + self.maxX);
-
     if ( pos.x <= self.minX || pos.x >= self.maxX ) {
         self.xdir = self.xdir * -1; // Flip the sign bit.
     }
@@ -303,3 +301,9 @@ Level.prototype._onKeyDown = function(event) {
     self.gravity = null;
   }
 };
+
+Level.prototype.getStatus() {
+    var self = this;
+
+
+}
