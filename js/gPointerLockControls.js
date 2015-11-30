@@ -274,6 +274,8 @@ GPointerLockControls.prototype.getDirection = function(v) {
 GPointerLockControls.prototype.dispose = function() {
   var self = this;
   
+  self.enabled = false;
+  
   document.removeEventListener('mousemove', self._onMouseMove.bind(self), false);
   document.removeEventListener('keydown', self._onKeyDown.bind(self), false);
   document.removeEventListener('keyup', self._onKeyUp.bind(self), false);

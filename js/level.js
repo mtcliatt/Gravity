@@ -65,6 +65,7 @@ function Level(scene, camera) {
 
   self.scene = scene;
   self.lockCamera = camera;
+  self.eListeners = [];
 
   self.controls = new GPointerLockControls(camera, Gravity.DOWN, null);
 
@@ -85,6 +86,9 @@ Level.prototype._initScene = function() {
   self.boundingBox = self._boundingBox();
   self.scene.add(self.boundingBox);
 
+  self.endingPoint = self._endingPoint();
+  //self.scene.add(self.endingPoint);
+
   self.objects = self._generateObjects();
   self.objects.map(self.scene.add.bind(self.scene));
 }
@@ -96,12 +100,34 @@ Level.prototype._initScene = function() {
  */
 Level.prototype._boundingBox = function() {
   var geometry = new THREE.BoxGeometry(500, 500, 500);
-  var material = new THREE.MeshBasicMaterial({
+  var material = new THREE.MeshPhongMaterial({
     color: 0x000000,
-    side: THREE.DoubleSide
+    side: THREE.DoubleSide,
+    specular: 0xffffff,
+    shininess: 50
   });
 
   return new THREE.Mesh(geometry, material);
+};
+
+/**
+ * Creates the ending point for the Level
+ * #_endingPoint
+ * @returns {object}
+ */
+Level.prototype._endingPoint = function() {
+  var geometry = new THREE.SphereGeometry(10, 32, 32);
+  var material = new THREE.MeshBasicMaterial({
+    color: 0xffffff
+  });
+
+  var mesh = new THREE.Mesh(geometry, material);
+  var light = new THREE.PointLight(0xffffff, 2, 50);
+  light.position.set(100, -240, 0);
+  light.add(mesh);
+  self.scene.add(light);
+
+  return mesh;
 };
 
 /**
@@ -141,7 +167,11 @@ Level.prototype._generatePlatforms = function() {
 
   for(var i = 0; i < xs.length; i++) {
     var geometry = new THREE.BoxGeometry(100, 100, 100);
-    var material = new THREE.MeshBasicMaterial({map: texture});
+    var material = new THREE.MeshPhongMaterial({
+      map: texture,
+      specular: 0xffffff,
+      shininess: 50
+    });
     var mesh = new THREE.Mesh(geometry, material);
 
 
@@ -239,6 +269,7 @@ Level.prototype.update = function() {
 
   self._updateSwitches();
   self._updatePlatforms();
+  self._updateEnd();
 };
 
 Level.prototype._updatePlatforms = function() {
@@ -278,6 +309,51 @@ Level.prototype._updateSwitches = function() {
   } else {
     self.gravity = null;
   }
+};
+
+/**
+ * Updates to determine if the end has been reached
+ * #_updateEnd
+ */
+Level.prototype._updateEnd = function() {
+  var self = this;
+
+  var view = self.controls.getDirection(new THREE.Vector3());
+  view[self.controls.gravity.gravity.axis] = 0;
+
+  var intersects = 0;
+  for(var i = 0; i < 8; i++) {
+    view.applyEuler(new THREE.Euler(0, Math.PI / 4, 0));
+    var raycaster = new THREE.Raycaster(self.controls.getObject().position,
+                                      view, 0, 10);
+    intersects += raycaster.intersectObjects([self.endingPoint]).length;
+  }
+
+  if(intersects) {
+    self.end = true;
+    self.controls.dispose();
+    self.emitEndEvent();
+  }
+};
+
+/**
+ * Register a new listener to receive end updates
+ * #addEndListener
+ * @param {function} listener
+ */
+Level.prototype.addEndListener = function(listener) {
+  var self = this;
+
+  alert('all done');
+  self.eListeners.push(listener);
+};
+
+Level.prototype.emitEndEvent = function() {
+  var self = this;
+
+  self.eListeners.forEach(function(listener) {
+    listener();
+  });
 };
 
 /**
