@@ -45,17 +45,17 @@ Platform.prototype._update = function() {
     console.log('At x=' + pos.x + ', can move to: ' + self.minX + '-' + self.maxX);
 
     if ( pos.x <= self.minX || pos.x >= self.maxX ) {
-        self.dir = self.dir / -1; // Flip the sign bit.
+        self.xdir = self.xdir * -1; // Flip the sign bit.
     }
     self.object.position.x += self.speed * self.xdir;
 
     if ( pos.y <= self.minY || pos.y >= self.maxY ) {
-        self.dir = self.dir / -1; // Flip the sign bit.
+        self.ydir = self.ydir * -1; // Flip the sign bit.
     }
     self.object.position.y += self.speed * self.ydir;
 
     if ( pos.z <= self.minZ || pos.z >= self.maxZ ) {
-        self.dir = self.dir / -1; // Flip the sign bit.
+        self.zdir = self.zdir * -1; // Flip the sign bit.
     }
     self.object.position.z += self.speed * self.zdir;
 }
@@ -160,8 +160,8 @@ Level.prototype._generatePlatforms = function() {
     platform.maxZ = 0;
 
     platform.xdir = 1;
-    platform.ydir = 1;
-    platform.zdir = 1;
+    platform.ydir = 0;
+    platform.zdir = 0;
 
     platform.speed = 1;
 
