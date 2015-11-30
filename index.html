@@ -6,10 +6,10 @@
 		<link rel="stylesheet" type="text/css" href="./css/main.css">
 	</head>
 	<body>
-		<script src="./js/three.min.js"></script> 
+		<script src="./js/three.min.js"></script>
     <script src="./js/gPointerLockControls.js"></script>
     <script src="./js/gravity.js"></script>
-    <script src="./js/level.js"></script>
+    <script src="./js/level1.js"></script>
 
     <div id="menu">
         <div id="info">
@@ -84,7 +84,7 @@
 				} else {
 					element.requestPointerLock();
 				}
-        
+
         animate();
 			}, false );
 
@@ -101,29 +101,29 @@
 			var canJump = false;
 			var prevTime = 0;
 			var velocity = new THREE.Vector3();
-      
-      
+
+
       var level;
 			function init() {
 				camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
         scene = new THREE.Scene();
-        
+
 				scene.fog = new THREE.Fog( 0xffffff, 0, 750 );
 				var light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
 				light.position.set( 0.5, 1, 0.75 );
 				scene.add( light );
-        
-        
+
+
         level = new Level(scene, camera);
-        
+
         controls = level.getControls();
-        
+
         controls.addGravityListener(function(event) {
           document.getElementById('info-direction').innerHTML = event.gravity.name;
-          document.getElementById('info-active').innerHTML = 
+          document.getElementById('info-active').innerHTML =
             (event.active) ? 'TRUE' : 'FALSE';
         });
-        
+
         controls.addDirectionListener(function(event) {
           var raycaster = new THREE.Raycaster(controls.getObject().position,
                                               event.direction);
@@ -131,7 +131,7 @@
           var intersects = raycaster.intersectObjects([level.boundingBox]);
           if(intersects.length) {
             var faceIndex = intersects[0].faceIndex;
-            
+
             var face;
             switch(faceIndex) {
               case 10:
@@ -178,7 +178,7 @@
 			}
 			function animate(now) {
 				requestAnimationFrame( animate );
-        
+
 				if ( controlsEnabled ) {
 					var time = performance.now();
 					var delta = ( time - prevTime ) / 1000;
