@@ -6,10 +6,11 @@
 		<link rel="stylesheet" type="text/css" href="./css/main.css">
 	</head>
 	<body>
-		<script src="./js/three.min.js"></script> 
+		<script src="./js/three.min.js"></script>
     <script src="./js/gPointerLockControls.js"></script>
     <script src="./js/gravity.js"></script>
     <script src="./js/level.js"></script>
+	<script src="./js/OrbitControls.js"></script>
 
     <div id="menu">
         <div id="info">
@@ -33,10 +34,13 @@
 		</div>
 
 		<script>
-			var camera, scene, renderer;
-			var controls;
+			var altCam, camera, scene, renderer;
+			var controls, altControls;
+			var onAlt = false;
 			var blocker = document.getElementById( 'blocker' );
 			var instructions = document.getElementById( 'instructions' );
+
+			var level = 1;
 
 			var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 
@@ -58,6 +62,14 @@
 			var pointerlockerror = function ( event ) {
 				instructions.style.display = '';
 			};
+
+			document.addEventListener( 'keyup', function(event) {
+				if (event.keyCode == 32) {
+					//onAlt = !onAlt;
+					//controlsEnabled = !controlsEnabled;
+				}
+			});
+
 			// Hook pointer lock state change events
 			document.addEventListener( 'pointerlockchange', pointerlockchange, false );
 			document.addEventListener( 'mozpointerlockchange', pointerlockchange, false );
@@ -84,8 +96,8 @@
 				} else {
 					element.requestPointerLock();
 				}
-        
-        animate();
+
+    			animate();
 			}, false );
 
 
@@ -101,67 +113,73 @@
 			var canJump = false;
 			var prevTime = 0;
 			var velocity = new THREE.Vector3();
-      
-      
-      var level;
-			function init() {
-				camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
-        scene = new THREE.Scene();
-        
-				scene.fog = new THREE.Fog( 0xffffff, 0, 750 );
-				var light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
-				light.position.set( 0.5, 1, 0.75 );
-				scene.add( light );
-        
-        
-        level = new Level(scene, camera);
-        
-        controls = level.getControls();
-        
-        controls.addGravityListener(function(event) {
-          document.getElementById('info-direction').innerHTML = event.gravity.name;
-          document.getElementById('info-active').innerHTML = 
-            (event.active) ? 'TRUE' : 'FALSE';
-        });
-        
-        controls.addDirectionListener(function(event) {
-          var raycaster = new THREE.Raycaster(controls.getObject().position,
-                                              event.direction);
 
-          var intersects = raycaster.intersectObjects([level.boundingBox]);
-          if(intersects.length) {
-            var faceIndex = intersects[0].faceIndex;
-            
-            var face;
-            switch(faceIndex) {
-              case 10:
-              case 11:
-                face = 'BACK';
-                break;
-              case 0:
-              case 1:
-                face = 'RIGHT';
-                break;
-              case 8:
-              case 9:
-                face = 'FRONT';
-                break;
-              case 2:
-              case 3:
-                face = 'LEFT';
-                break;
-              case 6:
-              case 7:
-                face = 'DOWN';
-                break;
-              case 4:
-              case 5:
-                face = 'UP';
-                break;
-            }
-            document.getElementById('info-face').innerHTML = face;
-          }
-        });
+	      var level;
+		  function init() {
+			camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
+			altCam = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
+			altCam.position.set( 0, 0, -100 );
+
+			//altControls = new THREE.OrbitControls(altCam);
+
+	        scene = new THREE.Scene();
+
+			altCam.lookAt( scene.position );
+
+			scene.fog = new THREE.Fog( 0xffffff, 0, 750 );
+			var light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
+			light.position.set( 0.5, 1, 0.75 );
+			scene.add( light );
+
+	        level = new Level(scene, camera);
+
+	        controls = level.getControls();
+
+	        controls.addGravityListener(function(event) {
+	          document.getElementById('info-direction').innerHTML = event.gravity.name;
+	          document.getElementById('info-active').innerHTML =
+	            (event.active) ? 'TRUE' : 'FALSE';
+	        });
+
+	        controls.addDirectionListener(function(event) {
+	          var raycaster = new THREE.Raycaster(controls.getObject().position,
+	                                              event.direction);
+
+	          var intersects = raycaster.intersectObjects([level.boundingBox]);
+	          if(intersects.length) {
+	            var faceIndex = intersects[0].faceIndex;
+
+	            var face;
+	            switch(faceIndex) {
+	              case 10:
+	              case 11:
+	                face = 'BACK';
+	                break;
+	              case 0:
+	              case 1:
+	                face = 'RIGHT';
+	                break;
+	              case 8:
+	              case 9:
+	                face = 'FRONT';
+	                break;
+	              case 2:
+	              case 3:
+	                face = 'LEFT';
+	                break;
+	              case 6:
+	              case 7:
+	                face = 'DOWN';
+	                break;
+	              case 4:
+	              case 5:
+	                face = 'UP';
+	                break;
+	            }
+	            document.getElementById('info-face').innerHTML = face;
+	          }
+	        });
+
 
 				renderer = new THREE.WebGLRenderer();
 				renderer.setClearColor( 0xffffff );
@@ -171,22 +189,36 @@
 				//
 				window.addEventListener( 'resize', onWindowResize, false );
 			}
+
 			function onWindowResize() {
 				camera.aspect = window.innerWidth / window.innerHeight;
 				camera.updateProjectionMatrix();
+				altCam.aspect = window.innerWidth / window.innerHeight;
+				altCam.updateProjectionMatrix();
 				renderer.setSize( window.innerWidth, window.innerHeight );
 			}
+
 			function animate(now) {
 				requestAnimationFrame( animate );
-        
+
+				/*
+				if (onAlt) {
+					var time = performance.now();
+					var delta = ( time - prevTime ) / 1000;
+					altControls.update(delta);
+					level.update();
+					prevTime = time;
+					renderer.render( scene, altCam );
+				} else {*/
 				if ( controlsEnabled ) {
 					var time = performance.now();
 					var delta = ( time - prevTime ) / 1000;
-          controls.update(delta, scene.children);
-          level.update();
+          			controls.update(delta, scene.children);
+          			level.update();
 					prevTime = time;
+					renderer.render( scene, camera );
 				}
-				renderer.render( scene, camera );
+				//}
 			}
 		</script>
 	</body>
