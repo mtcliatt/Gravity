@@ -521,8 +521,8 @@ Level.prototype._generateSwitches = function() {
     },
     {
       x: 245,
-      y: 200,
-      z: 200,
+      y: 245,
+      z: 245,
       g: Gravity.DOWN
     }
   ];
