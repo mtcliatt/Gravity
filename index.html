@@ -132,7 +132,7 @@
 			light.position.set( 0.5, 1, 0.75 );
 			scene.add( light );
 
-	        level = new Level(scene, camera, 1);
+	        level = new Level(scene, camera, 2, [0,0,0], [0,0,0]);
 
 	        controls = level.getControls();
 
@@ -141,6 +141,15 @@
 	          document.getElementById('info-active').innerHTML =
 	            (event.active) ? 'TRUE' : 'FALSE';
 	        });
+
+			//level.addEndListener
+
+
+
+
+
+
+
 
 	        controls.addDirectionListener(function(event) {
 	          var raycaster = new THREE.Raycaster(controls.getObject().position,
