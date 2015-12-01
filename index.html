@@ -9,6 +9,7 @@
 		<script src="./js/three.min.js"></script>
     <script src="./js/gPointerLockControls.js"></script>
     <script src="./js/gravity.js"></script>
+	<script src="./js/ob.js"></script>
     <script src="./js/level.js"></script>
 	<script src="./js/OrbitControls.js"></script>
 
@@ -131,7 +132,7 @@
 			light.position.set( 0.5, 1, 0.75 );
 			scene.add( light );
 
-	        level = new Level(scene, camera);
+	        level = new Level(scene, camera, 1);
 
 	        controls = level.getControls();
 

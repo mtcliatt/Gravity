@@ -58,12 +58,14 @@ Platform.prototype._update = function() {
     self.object.position.z += self.speed * self.zdir;
 }
 
-function Level(scene, camera) {
+function Level(scene, camera, level) {
   var self = this;
 
   self.scene = scene;
   self.lockCamera = camera;
   self.eListeners = [];
+
+  self.level = level;
 
   self.controls = new GPointerLockControls(camera, Gravity.DOWN, null);
 
@@ -149,64 +151,55 @@ Level.prototype._generateObjects = function() {
  * #_generatePlatforms
  * returns {array}
  */
-Level.prototype._generatePlatforms = function() {
-  var self = this;
+ Level.prototype._generatePlatforms = function() {
+   var self = this;
 
-  self.movers = [];
+   self.movers = [];
+   self.platforms = [];
 
-  self.platforms = [];
-  var loader = new THREE.TextureLoader();
+   var loader = new THREE.TextureLoader();
+   var textures = [];
+   textures[0] = loader.load('ftex.jpg');
 
-  var xs = [0, 0, 0];
-  var ys = [-200, -200, -200];
-  var zs = [-200, 200, 0];
+   var obj = objs[self.level];
+   console.log(objs);
+   for(var i = 0; i < obj.length; i++) {
+     var geometry = new THREE.BoxGeometry(obj[i].width, obj[i].height, obj[i].depth);
+     var material = new THREE.MeshPhongMaterial({
+       map: textures[obj[i].texture],
+       specular: 0xffffff,
+       shininess: 50
+     });
+     var mesh = new THREE.Mesh(geometry, material);
 
-  var texture = loader.load('ftex.jpg');
+     var platform = {};
+     platform.object = mesh;
 
-  for(var i = 0; i < xs.length; i++) {
-    var geometry = new THREE.BoxGeometry(100, 100, 100);
-    var material = new THREE.MeshPhongMaterial({
-      map: texture,
-      specular: 0xffffff,
-      shininess: 50
-    });
-    var mesh = new THREE.Mesh(geometry, material);
+     platform.x = obj[i].x;
+     platform.y = obj[i].y;
+     platform.z = obj[i].z;
 
+     platform.minX = obj[i].minX;
+     platform.maxX = obj[i].maxX;
+     platform.minY = obj[i].minY;
+     platform.maxY = obj[i].maxY;
+     platform.minZ = obj[i].minZ;
+     platform.maxZ = obj[i].maxZ;
 
-    var platform = {};
-    platform.object = mesh;
+     platform.xdir = obj[i].xdir;
+     platform.ydir = obj[i].ydir;
+     platform.zdir = obj[i].zdir;
 
-    platform.x = xs[i];
-    platform.y = ys[i];
-    platform.z = zs[i];
+     platform.speed = obj[i].speed;
 
-    platform.minX = -100;
-    platform.maxX = 100;
-    platform.minY = 0;
-    platform.maxY = 0;
-    platform.minZ = 0;
-    platform.maxZ = 0;
+     platform = new Platform(platform);
 
-    platform.xdir = 1;
-    platform.ydir = 0;
-    platform.zdir = 0;
+     self.platforms.push(platform.object);
+     self.movers.push(platform);
+   }
 
-    platform.speed = 1;
-
-    platform = new Platform(platform);
-
-    self.platforms.push(platform.object);
-    self.movers.push(platform);
-
-    //mesh.position.x = xs[i];
-    //mesh.position.y = ys[i];
-    //mesh.position.z = zs[i];
-
-    //self.platforms.push(mesh);
-  }
-
-  return self.platforms;
-};
+   return self.platforms;
+ };
 
 /**
  * Generates all switch objects for the Level
