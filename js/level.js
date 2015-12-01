@@ -58,7 +58,7 @@ Platform.prototype._update = function() {
     self.object.position.z += self.speed * self.zdir;
 }
 
-function Level(scene, camera, level, start, end) {
+function Level(scene, camera, level) {
   var self = this;
 
   self.scene = scene;
@@ -72,9 +72,11 @@ function Level(scene, camera, level, start, end) {
   self.scene.add(self.controls.getObject());
 
   var me = self.controls.getObject().position;
-  me.x = start[0];
-  me.y = start[1];
-  me.z = start[2];
+  me.x = start[self.level].x;
+  me.y = start[self.level].y;
+  me.z = start[self.level].z;
+
+  self.end = end[self.level];
 
   self._initScene();
 
@@ -218,8 +220,7 @@ Level.prototype._generateSwitches = function() {
   var loader = new THREE.TextureLoader();
 
   var obj = objsSwitches[self.level];
-  console.log(objsSwitches);
-  console.log(obj);
+  
   var texArrow = loader.load('arrow.jpg');
   var texCrate = loader.load('crate.jpg');
 
