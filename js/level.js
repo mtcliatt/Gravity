@@ -71,9 +71,6 @@ function Level(scene, camera, level) {
 
   self.scene.add(self.controls.getObject());
 
-  console.log('On level ' + self.level);
-  console.log('Start: ' + start[self.level].x);
-
   var me = self.controls.getObject().position;
   me.x = start[self.level].x;
   me.y = start[self.level].y;
@@ -373,7 +370,7 @@ Level.prototype.getControls = function() {
 Level.prototype._onKeyDown = function(event) {
   var self = this;
 
-  if(event.keyCode >= 37 && event.keyCode <= 40 && self.gravity) {
+  if(event.keyCode == 13 && self.gravity) {
     self.controls.setGravity(self.gravity);
     self.gravity = null;
   }

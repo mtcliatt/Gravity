@@ -37,6 +37,17 @@
 
 	</div>
 
+
+
+	<div id="congrats">
+		<div id="congrats-inner">
+			<span style="font-size:60px">You've won!</span>
+			<br />
+			<span style="font-size:32px">Press enter to play again..</span>
+		</div>
+	</div>
+
+
 	<script>
 		var altCam, camera, scene, renderer;
 		var controls, altControls;
@@ -44,7 +55,7 @@
 		var blocker = document.getElementById('blocker');
 		var instructions = document.getElementById('instructions');
 
-		var level = 1;
+		var level = 1, won = false;
 
 		var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 
@@ -71,6 +82,13 @@
 			if (event.keyCode == 32) {
 				//onAlt = !onAlt;
 				//controlsEnabled = !controlsEnabled;
+			}
+			if (event.keyCode == 13) {
+				if ( won ) {
+					won = false;
+					document.getElementById('congrats').style.visibility = 'hidden';
+					setup(0);
+				}
 			}
 		});
 
@@ -136,7 +154,7 @@
 			light.position.set(0.5, 1, 0.75);
 			scene.add(light);
 
-	        level = new Level(scene, camera, 0);
+	        level = new Level(scene, camera, 2);
 
 			controls = level.getControls();
 
@@ -218,7 +236,7 @@
 				prevTime = time;
 				renderer.render( scene, altCam );
 			} else {*/
-			if (controlsEnabled) {
+			if (controlsEnabled && !won) {
 				var time = performance.now();
 				var delta = (time - prevTime) / 1000;
 				controls.update(delta, scene.children);
@@ -226,33 +244,43 @@
 				prevTime = time;
 				renderer.render(scene, camera);
 			}
+		}
 
-			function setup(at) {
-
-				camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
-				scene = new THREE.Scene();
-
-				scene.fog = new THREE.Fog( 0xffffff, 0, 750 );
-				var light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
-				light.position.set( 0.5, 1, 0.75 );
-				scene.add( light );
-
-		        level = new Level(scene, camera, at);
-
-				controls.dispose();
-				controls.enabled = false;
-
-		        controls = level.getControls();
-				controls.enabled = true;
-
-		        controls.addGravityListener(function(event) {
-		          document.getElementById('info-direction').innerHTML = event.gravity.name;
-		          document.getElementById('info-active').innerHTML =
-		            (event.active) ? 'TRUE' : 'FALSE';
-		        });
-
-				level.addEndListener(setup.bind(null, ++at));
+		function setup(at) {
+			//document.getElementById('congrats').style.visibility = 'hidden';
+			if(at >= objsPlatforms.length) {
+				return win();
 			}
+
+			camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
+			scene = new THREE.Scene();
+
+			scene.fog = new THREE.Fog( 0xffffff, 0, 750 );
+			var light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
+			light.position.set( 0.5, 1, 0.75 );
+			scene.add( light );
+
+	        level = new Level(scene, camera, at);
+
+			controls.dispose();
+			controls.enabled = false;
+
+	        controls = level.getControls();
+			controls.enabled = true;
+
+	        controls.addGravityListener(function(event) {
+	          document.getElementById('info-direction').innerHTML = event.gravity.name;
+	          document.getElementById('info-active').innerHTML =
+	            (event.active) ? 'TRUE' : 'FALSE';
+	        });
+
+			level.addEndListener(setup.bind(null, ++at));
+		}
+
+		function win() {
+			won = true;
+			document.getElementById('congrats').style.visibility = 'visible';
+		}
 		</script>
 	</body>
 </html>

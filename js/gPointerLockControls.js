@@ -404,8 +404,6 @@ GPointerLockControls.prototype.emitDirectionEvent = function() {
 GPointerLockControls.prototype._onMouseMove = function(event) {
   var self = this;
 
-  console.log( 'moving mouse for level ' + self.level);
-
   if (!self.enabled) {
     return;
   }
