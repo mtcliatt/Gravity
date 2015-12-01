@@ -58,7 +58,7 @@ Platform.prototype._update = function() {
     self.object.position.z += self.speed * self.zdir;
 }
 
-function Level(scene, camera, level) {
+function Level(scene, camera, level, start, end) {
   var self = this;
 
   self.scene = scene;
@@ -70,6 +70,11 @@ function Level(scene, camera, level) {
   self.controls = new GPointerLockControls(camera, Gravity.DOWN, null);
 
   self.scene.add(self.controls.getObject());
+
+  var me = self.controls.getObject().position;
+  me.x = start[0];
+  me.y = start[1];
+  me.z = start[2];
 
   self._initScene();
 
@@ -161,8 +166,8 @@ Level.prototype._generateObjects = function() {
    var textures = [];
    textures[0] = loader.load('ftex.jpg');
 
-   var obj = objs[self.level];
-   console.log(objs);
+   var obj = objsPlatforms[self.level];
+
    for(var i = 0; i < obj.length; i++) {
      var geometry = new THREE.BoxGeometry(obj[i].width, obj[i].height, obj[i].depth);
      var material = new THREE.MeshPhongMaterial({
@@ -212,16 +217,13 @@ Level.prototype._generateSwitches = function() {
   self.switches = [];
   var loader = new THREE.TextureLoader();
 
-  var xs = [110, 130, 245, 170];
-  var ys = [-245, 245,-245, -245];
-  var zs = [-150, -150, -150, -150];
-  var rs = [0, Math.PI, Math.PI / 2, -Math.PI / 2];
-  var gs = [Gravity.LEFT, Gravity.RIGHT, Gravity.DOWN, Gravity.UP];
-
+  var obj = objsSwitches[self.level];
+  console.log(objsSwitches);
+  console.log(obj);
   var texArrow = loader.load('arrow.jpg');
   var texCrate = loader.load('crate.jpg');
 
-  for(var i = 0; i < xs.length; i++) {
+  for(var i = 0; i < obj.length; i++) {
     var crateMaterial = new THREE.MeshBasicMaterial({
       map: texCrate
     });
@@ -238,12 +240,12 @@ Level.prototype._generateSwitches = function() {
 
     var mesh = new THREE.Mesh(geometry, material);
 
-    mesh.position.x = xs[i];
-    mesh.position.y = ys[i];
-    mesh.position.z = zs[i];
-    mesh.rotation.z = rs[i];
+    mesh.position.x = obj[i].x;
+    mesh.position.y = obj[i].y;
+    mesh.position.z = obj[i].z;
+    mesh.rotation.z = obj[i].g.cubeRotation;
 
-    mesh.gravity = gs[i];
+    mesh.gravity = obj[i].g;
 
     self.switches.push(mesh);
   }

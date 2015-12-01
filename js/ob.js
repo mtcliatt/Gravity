@@ -1,4 +1,4 @@
-var objs = [
+var objsPlatforms = [
 
 //level 1
 [
@@ -603,6 +603,67 @@ var objs = [
     zdir: 0,
     speed: 0
   }
+]
+
+];
+
+var objsSwitches = [
+[
+    {
+      x: -200,
+      y: -145,
+      z: 200,
+      g: Gravity.UP
+    },
+    {
+      x: 200,
+      y: -245,
+      z: -200,
+      g: Gravity.UP
+    },
+    {
+      x: 200,
+      y: 245,
+      z: 200,
+      g: Gravity.DOWN
+    },
+    {
+      x: -200,
+      y: 245,
+      z: -200,
+      g: Gravity.DOWN
+    }
+],
+
+[
+    
+],
+
+[
+    {
+      x: 0,
+      y: -245,
+      z: 200,
+      g: Gravity.UP
+    },
+    {
+      x: -100,
+      y: -55,
+      z: 180,
+      g: Gravity.RIGHT
+    },
+    {
+      x: 245,
+      y: 0,
+      z: -200,
+      g: Gravity.DOWN
+    },
+    {
+      x: 245,
+      y: 200,
+      z: 200,
+      g: Gravity.DOWN
+    }
 ]
 
 ];
