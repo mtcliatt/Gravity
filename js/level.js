@@ -169,6 +169,9 @@ Level.prototype._generateObjects = function() {
    var loader = new THREE.TextureLoader();
    var textures = [];
    textures[0] = loader.load('ftex.jpg');
+   textures[1] = loader.load('Metal.png');
+   textures[2] = loader.load('wood.jpg');
+   textures[3] = loader.load('circuit.jpg');
 
    var obj = objsPlatforms[self.level];
 
