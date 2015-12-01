@@ -126,6 +126,7 @@ Level.prototype._boundingBox = function() {
  * @returns {object}
  */
 Level.prototype._endingPoint = function() {
+  var self = this;
   var geometry = new THREE.SphereGeometry(10, 32, 32);
   var material = new THREE.MeshBasicMaterial({
     color: 0xffffff
@@ -133,7 +134,7 @@ Level.prototype._endingPoint = function() {
 
   var mesh = new THREE.Mesh(geometry, material);
   var light = new THREE.PointLight(0xffffff, 2, 50);
-  light.position.set(100, -240, 0);
+  light.position.set(end[self.level].x, end[self.level].y, end[self.level].z);
   light.add(mesh);
   self.scene.add(light);
 
