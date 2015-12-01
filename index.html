@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="utf-8">
-	<title>three.js - pointerlock controls</title>
+	<title>Gravity - Matt, Chris, Ben</title>
 	<link rel="stylesheet" type="text/css" href="./css/main.css">
 </head>
 
@@ -32,12 +32,11 @@
 
 		<div id="instructions">
 			<span style="font-size:40px">Click to play</span>
-			<br /> (W, A, S, D = Move, ARROWS = Gravity, MOUSE = Look around)
+			<br /> (W, A, S, D = Move, ENTER = Gravity
+			<br /> MOUSE = Look around, R = Reset Level)
 		</div>
 
 	</div>
-
-
 
 	<div id="congrats">
 		<div id="congrats-inner">
@@ -55,7 +54,7 @@
 		var blocker = document.getElementById('blocker');
 		var instructions = document.getElementById('instructions');
 
-		var level = 1, won = false;
+		var level, won = false;
 
 		var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 
@@ -89,6 +88,9 @@
 					document.getElementById('congrats').style.visibility = 'hidden';
 					setup(0);
 				}
+			}
+			if (event.keyCode ==  82) {
+				setup(level.level);
 			}
 		});
 
