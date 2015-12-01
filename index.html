@@ -226,33 +226,34 @@
 				prevTime = time;
 				renderer.render(scene, camera);
 			}
+		}
 
-			function setup(at) {
+		function setup(at) {
 
-				camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
-				scene = new THREE.Scene();
+			camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
+			scene = new THREE.Scene();
 
-				scene.fog = new THREE.Fog( 0xffffff, 0, 750 );
-				var light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
-				light.position.set( 0.5, 1, 0.75 );
-				scene.add( light );
+			scene.fog = new THREE.Fog( 0xffffff, 0, 750 );
+			var light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
+			light.position.set( 0.5, 1, 0.75 );
+			scene.add( light );
 
-		        level = new Level(scene, camera, at);
+					level = new Level(scene, camera, at);
 
-				controls.dispose();
-				controls.enabled = false;
+			controls.dispose();
+			controls.enabled = false;
 
-		        controls = level.getControls();
-				controls.enabled = true;
+					controls = level.getControls();
+			controls.enabled = true;
 
-		        controls.addGravityListener(function(event) {
-		          document.getElementById('info-direction').innerHTML = event.gravity.name;
-		          document.getElementById('info-active').innerHTML =
-		            (event.active) ? 'TRUE' : 'FALSE';
-		        });
+					controls.addGravityListener(function(event) {
+						document.getElementById('info-direction').innerHTML = event.gravity.name;
+						document.getElementById('info-active').innerHTML =
+							(event.active) ? 'TRUE' : 'FALSE';
+					});
 
-				level.addEndListener(setup.bind(null, ++at));
-			}
+			level.addEndListener(setup.bind(null, ++at));
+		}
 		</script>
 	</body>
 </html>
