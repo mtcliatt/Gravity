@@ -284,7 +284,11 @@ var objsPlatforms = [
     ydir: 0,
     zdir: 0,
     speed: 0
-  }],
+}
+],
+
+
+
 
 
   //level 2
@@ -450,7 +454,8 @@ var objsPlatforms = [
     ydir: 0,
     zdir: -1,
     speed: 1
-  }],
+   }
+],
 
 
 
