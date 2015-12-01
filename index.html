@@ -46,6 +46,12 @@
 		</div>
 	</div>
 
+	<div id="levelBanner">
+		<div id="levelBanner-inner">
+			<span style="font-size:60px">On to next level!</span>
+		</div>
+	</div>
+
 
 	<script>
 		var altCam, camera, scene, renderer;
@@ -54,7 +60,7 @@
 		var blocker = document.getElementById('blocker');
 		var instructions = document.getElementById('instructions');
 
-		var level, won = false;
+		var level = 0, won = false;
 
 		var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 
@@ -166,7 +172,16 @@
 					(event.active) ? 'TRUE' : 'FALSE';
 			});
 
-			level.addEndListener(setup.bind(null, level.level + 1));
+			level.addEndListener(function() {
+				document.getElementById('levelBanner').style.visibility = 'visible';
+				console.log('Showing level thing');
+
+				setTimeout(function() {
+					document.getElementById('levelBanner').style.visibility = 'hidden';
+				}, 3000);
+
+				setup(level.level + 1);
+			});
 
 
 			controls.addDirectionListener(function(event) {
@@ -244,12 +259,12 @@
 				controls.update(delta, scene.children);
 				level.update();
 				prevTime = time;
+
 				renderer.render(scene, camera);
 			}
 		}
 
 		function setup(at) {
-			//document.getElementById('congrats').style.visibility = 'hidden';
 			if(at >= objsPlatforms.length) {
 				return win();
 			}
@@ -276,13 +291,21 @@
 	            (event.active) ? 'TRUE' : 'FALSE';
 	        });
 
-			level.addEndListener(setup.bind(null, ++at));
+			level.addEndListener( function() {
+				document.getElementById('levelBanner').style.visibility = 'visible';
+				console.log('Showing level thing');
+
+				setTimeout(function() {
+					document.getElementById('levelBanner').style.visibility = 'hidden';
+				}, 3000);
+
+				setup(at + 1);
+			});
 		}
 
 		function win() {
 			won = true;
 			document.getElementById('congrats').style.visibility = 'visible';
-
 		}
 		</script>
 	</body>
