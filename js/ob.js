@@ -837,7 +837,7 @@ var objsPlatforms = [
       minY: 0,
       maxY: 0,
       minZ: -350,
-      maxZ: 450,
+      maxZ: 470,
       xdir: 0,
       ydir: 0,
       zdir: 1,
@@ -856,7 +856,7 @@ var objsPlatforms = [
       minY: 0,
       maxY: 0,
       minZ: -350,
-      maxZ: 450,
+      maxZ: 470,
       xdir: 0,
       ydir: 0,
       zdir: 1,
@@ -1400,7 +1400,7 @@ var objsSwitches = [
     g: Gravity.DOWN
   }, {
     x: 50,
-    y: 120,
+    y: 110,
     z: 495,
     g: Gravity.UP
   }, {

@@ -194,7 +194,11 @@ GPointerLockControls.prototype._updateVelocity = function(delta) {
   }
 
   if(self.forward.move) {
-    self.velocity.z = Math.max(-60, self.velocity.z - (400 * delta));
+		var max = -60;
+		if(self.shifted){
+			max *= 2;
+		}
+    self.velocity.z = Math.max(max, self.velocity.z - (400 * delta));
   }
 
   if(self.backward.move) {
@@ -431,6 +435,12 @@ GPointerLockControls.prototype._onKeyDown = function(event) {
   var self = this;
 
   switch(event.keyCode) {
+		case 16: // shift
+      if(!self.shifted) {
+        self.shifted = true;
+      }
+
+			break;
     case 87: // w
       if(!self.forward.disable) {
         self.forward.move = true;
@@ -486,6 +496,9 @@ GPointerLockControls.prototype._onKeyUp = function(event) {
   var self = this;
 
   switch(event.keyCode) {
+		case 16: // shift
+			self.shifted = false;
+			break;
     case 87: // w
 			self.forward.move = false;
 			break;
