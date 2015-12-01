@@ -50,6 +50,11 @@ function GPointerLockControls (camera, gravity, speed) {
     move: false,
     disable: false
   };
+  
+  self.on = {
+    object: null,
+    position: null
+  };
 
 	document.addEventListener('mousemove', self._onMouseMove.bind(self), false);
   document.addEventListener('keydown', self._onKeyDown.bind(self), false);
@@ -222,6 +227,24 @@ GPointerLockControls.prototype._updateGravity = function(delta, objects) {
 
   var intersects = self.raycaster.intersectObjects(objects);
   if(intersects.length) {
+    var object = intersects[0].object;
+    var position = object.position;
+    
+    if(self.on.object == object) {
+      if(self.on.position) {
+        var dx = position.x - self.on.position.x;
+        var dy = position.y - self.on.position.y;
+        var dz = position.z - self.on.position.z;
+        
+        self.yawObject.position.x += dx;
+        self.yawObject.position.y += dy;
+        self.yawObject.position.z += dz;
+      }
+    }
+    
+    self.on.object = object;
+    self.on.position = new THREE.Vector3().copy(position);
+    
     var distance = intersects[0].distance;
     self.yawObject.translateY(-distance);
 
@@ -273,7 +296,9 @@ GPointerLockControls.prototype.getDirection = function(v) {
  */
 GPointerLockControls.prototype.dispose = function() {
   var self = this;
-
+  
+  self.enabled = false;
+  
   document.removeEventListener('mousemove', self._onMouseMove.bind(self), false);
   document.removeEventListener('keydown', self._onKeyDown.bind(self), false);
   document.removeEventListener('keyup', self._onKeyUp.bind(self), false);

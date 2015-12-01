@@ -58,11 +58,14 @@ Platform.prototype._update = function() {
     self.object.position.z += self.speed * self.zdir;
 }
 
-function Level(scene, camera) {
+function Level(scene, camera, level) {
   var self = this;
 
   self.scene = scene;
   self.lockCamera = camera;
+  self.eListeners = [];
+
+  self.level = level;
 
   self.controls = new GPointerLockControls(camera, Gravity.DOWN, null);
 
@@ -83,6 +86,9 @@ Level.prototype._initScene = function() {
   self.boundingBox = self._boundingBox();
   self.scene.add(self.boundingBox);
 
+  self.endingPoint = self._endingPoint();
+  //self.scene.add(self.endingPoint);
+
   self.objects = self._generateObjects();
   self.objects.map(self.scene.add.bind(self.scene));
 }
@@ -94,12 +100,34 @@ Level.prototype._initScene = function() {
  */
 Level.prototype._boundingBox = function() {
   var geometry = new THREE.BoxGeometry(500, 500, 500);
-  var material = new THREE.MeshBasicMaterial({
+  var material = new THREE.MeshPhongMaterial({
     color: 0x000000,
-    side: THREE.DoubleSide
+    side: THREE.DoubleSide,
+    specular: 0xffffff,
+    shininess: 50
   });
 
   return new THREE.Mesh(geometry, material);
+};
+
+/**
+ * Creates the ending point for the Level
+ * #_endingPoint
+ * @returns {object}
+ */
+Level.prototype._endingPoint = function() {
+  var geometry = new THREE.SphereGeometry(10, 32, 32);
+  var material = new THREE.MeshBasicMaterial({
+    color: 0xffffff
+  });
+
+  var mesh = new THREE.Mesh(geometry, material);
+  var light = new THREE.PointLight(0xffffff, 2, 50);
+  light.position.set(100, -240, 0);
+  light.add(mesh);
+  self.scene.add(light);
+
+  return mesh;
 };
 
 /**
@@ -123,60 +151,55 @@ Level.prototype._generateObjects = function() {
  * #_generatePlatforms
  * returns {array}
  */
-Level.prototype._generatePlatforms = function() {
-  var self = this;
+ Level.prototype._generatePlatforms = function() {
+   var self = this;
 
-  self.movers = [];
+   self.movers = [];
+   self.platforms = [];
 
-  self.platforms = [];
-  var loader = new THREE.TextureLoader();
+   var loader = new THREE.TextureLoader();
+   var textures = [];
+   textures[0] = loader.load('ftex.jpg');
 
-  var xs = [0, 0, 0];
-  var ys = [-200, -200, -200];
-  var zs = [-200, 200, 0];
+   var obj = objs[self.level];
+   console.log(objs);
+   for(var i = 0; i < obj.length; i++) {
+     var geometry = new THREE.BoxGeometry(obj[i].width, obj[i].height, obj[i].depth);
+     var material = new THREE.MeshPhongMaterial({
+       map: textures[obj[i].texture],
+       specular: 0xffffff,
+       shininess: 50
+     });
+     var mesh = new THREE.Mesh(geometry, material);
 
-  var texture = loader.load('ftex.jpg');
+     var platform = {};
+     platform.object = mesh;
 
-  for(var i = 0; i < xs.length; i++) {
-    var geometry = new THREE.BoxGeometry(100, 100, 100);
-    var material = new THREE.MeshBasicMaterial({map: texture});
-    var mesh = new THREE.Mesh(geometry, material);
+     platform.x = obj[i].x;
+     platform.y = obj[i].y;
+     platform.z = obj[i].z;
 
+     platform.minX = obj[i].minX;
+     platform.maxX = obj[i].maxX;
+     platform.minY = obj[i].minY;
+     platform.maxY = obj[i].maxY;
+     platform.minZ = obj[i].minZ;
+     platform.maxZ = obj[i].maxZ;
 
-    var platform = {};
-    platform.object = mesh;
+     platform.xdir = obj[i].xdir;
+     platform.ydir = obj[i].ydir;
+     platform.zdir = obj[i].zdir;
 
-    platform.x = xs[i];
-    platform.y = ys[i];
-    platform.z = zs[i];
+     platform.speed = obj[i].speed;
 
-    platform.minX = -100;
-    platform.maxX = 100;
-    platform.minY = 0;
-    platform.maxY = 0;
-    platform.minZ = 0;
-    platform.maxZ = 0;
+     platform = new Platform(platform);
 
-    platform.xdir = 1;
-    platform.ydir = 0;
-    platform.zdir = 0;
+     self.platforms.push(platform.object);
+     self.movers.push(platform);
+   }
 
-    platform.speed = 1;
-
-    platform = new Platform(platform);
-
-    self.platforms.push(platform.object);
-    self.movers.push(platform);
-
-    //mesh.position.x = xs[i];
-    //mesh.position.y = ys[i];
-    //mesh.position.z = zs[i];
-
-    //self.platforms.push(mesh);
-  }
-
-  return self.platforms;
-};
+   return self.platforms;
+ };
 
 /**
  * Generates all switch objects for the Level
@@ -237,6 +260,7 @@ Level.prototype.update = function() {
 
   self._updateSwitches();
   self._updatePlatforms();
+  self._updateEnd();
 };
 
 Level.prototype._updatePlatforms = function() {
@@ -276,6 +300,51 @@ Level.prototype._updateSwitches = function() {
   } else {
     self.gravity = null;
   }
+};
+
+/**
+ * Updates to determine if the end has been reached
+ * #_updateEnd
+ */
+Level.prototype._updateEnd = function() {
+  var self = this;
+
+  var view = self.controls.getDirection(new THREE.Vector3());
+  view[self.controls.gravity.gravity.axis] = 0;
+
+  var intersects = 0;
+  for(var i = 0; i < 8; i++) {
+    view.applyEuler(new THREE.Euler(0, Math.PI / 4, 0));
+    var raycaster = new THREE.Raycaster(self.controls.getObject().position,
+                                      view, 0, 10);
+    intersects += raycaster.intersectObjects([self.endingPoint]).length;
+  }
+
+  if(intersects) {
+    self.end = true;
+    self.controls.dispose();
+    self.emitEndEvent();
+  }
+};
+
+/**
+ * Register a new listener to receive end updates
+ * #addEndListener
+ * @param {function} listener
+ */
+Level.prototype.addEndListener = function(listener) {
+  var self = this;
+
+  alert('all done');
+  self.eListeners.push(listener);
+};
+
+Level.prototype.emitEndEvent = function() {
+  var self = this;
+
+  self.eListeners.forEach(function(listener) {
+    listener();
+  });
 };
 
 /**
