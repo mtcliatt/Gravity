@@ -11,7 +11,6 @@
     <script src="./js/gravity.js"></script>
 	<script src="./js/ob.js"></script>
     <script src="./js/level.js"></script>
-	<script src="./js/OrbitControls.js"></script>
 
     <div id="menu">
         <div id="info">
@@ -132,7 +131,7 @@
 			light.position.set( 0.5, 1, 0.75 );
 			scene.add( light );
 
-	        level = new Level(scene, camera, 2, [0,0,0], [0,0,0]);
+	        level = new Level(scene, camera, 0);
 
 	        controls = level.getControls();
 
