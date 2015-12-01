@@ -132,7 +132,7 @@
 			light.position.set( 0.5, 1, 0.75 );
 			scene.add( light );
 
-	        level = new Level(scene, camera, 2, [0,0,0], [0,0,0]);
+	        level = new Level(scene, camera, 0);
 
 	        controls = level.getControls();
 
@@ -142,13 +142,7 @@
 	            (event.active) ? 'TRUE' : 'FALSE';
 	        });
 
-			//level.addEndListener
-
-
-
-
-
-
+			level.addEndListener(setup.bind(null, level.level + 1));
 
 
 	        controls.addDirectionListener(function(event) {
@@ -229,6 +223,33 @@
 					renderer.render( scene, camera );
 				}
 				//}
+			}
+
+			function setup(at) {
+
+				camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
+				scene = new THREE.Scene();
+
+				scene.fog = new THREE.Fog( 0xffffff, 0, 750 );
+				var light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
+				light.position.set( 0.5, 1, 0.75 );
+				scene.add( light );
+
+		        level = new Level(scene, camera, at);
+
+				controls.dispose();
+				controls.enabled = false;
+
+		        controls = level.getControls();
+				controls.enabled = true;
+
+		        controls.addGravityListener(function(event) {
+		          document.getElementById('info-direction').innerHTML = event.gravity.name;
+		          document.getElementById('info-active').innerHTML =
+		            (event.active) ? 'TRUE' : 'FALSE';
+		        });
+
+				level.addEndListener(setup.bind(null, ++at));
 			}
 		</script>
 	</body>

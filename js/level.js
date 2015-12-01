@@ -67,9 +67,12 @@ function Level(scene, camera, level) {
 
   self.level = level;
 
-  self.controls = new GPointerLockControls(camera, Gravity.DOWN, null);
+  self.controls = new GPointerLockControls(camera, Gravity.DOWN, null, self.level);
 
   self.scene.add(self.controls.getObject());
+
+  console.log('On level ' + self.level);
+  console.log('Start: ' + start[self.level].x);
 
   var me = self.controls.getObject().position;
   me.x = start[self.level].x;
@@ -220,7 +223,7 @@ Level.prototype._generateSwitches = function() {
   var loader = new THREE.TextureLoader();
 
   var obj = objsSwitches[self.level];
-  
+
   var texArrow = loader.load('arrow.jpg');
   var texCrate = loader.load('crate.jpg');
 
@@ -338,7 +341,6 @@ Level.prototype._updateEnd = function() {
 Level.prototype.addEndListener = function(listener) {
   var self = this;
 
-  alert('all done');
   self.eListeners.push(listener);
 };
 
@@ -348,6 +350,8 @@ Level.prototype.emitEndEvent = function() {
   self.eListeners.forEach(function(listener) {
     listener();
   });
+
+  self.eListeners = [];
 };
 
 /**
