@@ -71,7 +71,7 @@ function Level(scene, camera) {
   self.scene.add(self.controls.getObject());
 
   var me = self.controls.getObject().position;
-  me.x = 200;
+  me.x = -200;
   me.y = -100;
   me.z = 200;
 
@@ -142,7 +142,7 @@ Level.prototype._generatePlatforms = function() {
     {
       x: -200,
       y: -200,
-      z: 200,
+      z: -100,
       width: 100,
       height: 100,
       depth: 100,
@@ -161,7 +161,7 @@ Level.prototype._generatePlatforms = function() {
     {
       x: -100,
       y: -200,
-      z: 200,
+      z: -100,
       width: 100,
       height: 100,
       depth: 100,
@@ -180,7 +180,7 @@ Level.prototype._generatePlatforms = function() {
     {
       x: 0,
       y: -200,
-      z: 200,
+      z: -100,
       width: 100,
       height: 100,
       depth: 100,
@@ -199,7 +199,7 @@ Level.prototype._generatePlatforms = function() {
     {
       x: 100,
       y: -200,
-      z: 200,
+      z: -100,
       width: 100,
       height: 100,
       depth: 100,
@@ -218,7 +218,7 @@ Level.prototype._generatePlatforms = function() {
     {
       x: 200,
       y: -200,
-      z: 200,
+      z: -100,
       width: 100,
       height: 100,
       depth: 100,
@@ -235,9 +235,9 @@ Level.prototype._generatePlatforms = function() {
       speed: 0
     },
     {
-      x: -200,
-      y: -200,
-      z: -200,
+      x: 200,
+      y: -100,
+      z: -100,
       width: 100,
       height: 100,
       depth: 100,
@@ -254,9 +254,9 @@ Level.prototype._generatePlatforms = function() {
       speed: 0
     },
     {
-      x: 0,
-      y: 200,
-      z: 200,
+      x: 200,
+      y: 0,
+      z: -100,
       width: 100,
       height: 100,
       depth: 100,
@@ -273,9 +273,9 @@ Level.prototype._generatePlatforms = function() {
       speed: 0
     },
     {
-      x: 0,
-      y: 200,
-      z: 100,
+      x: 200,
+      y: 100,
+      z: -100,
       width: 100,
       height: 100,
       depth: 100,
@@ -292,26 +292,7 @@ Level.prototype._generatePlatforms = function() {
       speed: 0
     },
     {
-      x: 0,
-      y: 200,
-      z: 0,
-      width: 100,
-      height: 100,
-      depth: 100,
-      texture: 0,
-      minX: 0,
-      maxX: 0,
-      minY: 0,
-      maxY: 0,
-      minZ: 0,
-      maxZ: 0,
-      xdir: 0,
-      ydir: 0,
-      zdir: 0,
-      speed: 0
-    },
-    {
-      x: 0,
+      x: 200,
       y: 200,
       z: -100,
       width: 100,
@@ -331,6 +312,82 @@ Level.prototype._generatePlatforms = function() {
     },
     {
       x: 0,
+      y: -100,
+      z: 200,
+      width: 100,
+      height: 100,
+      depth: 100,
+      texture: 0,
+      minX: 0,
+      maxX: 0,
+      minY: 0,
+      maxY: 0,
+      minZ: 0,
+      maxZ: 0,
+      xdir: 0,
+      ydir: 0,
+      zdir: 0,
+      speed: 0
+    },
+    {
+      x: -100,
+      y: 0,
+      z: 200,
+      width: 100,
+      height: 100,
+      depth: 100,
+      texture: 0,
+      minX: 0,
+      maxX: 0,
+      minY: 0,
+      maxY: 0,
+      minZ: 0,
+      maxZ: 0,
+      xdir: 0,
+      ydir: 0,
+      zdir: 0,
+      speed: 0
+    },
+    {
+      x: -100,
+      y: 100,
+      z: 200,
+      width: 100,
+      height: 100,
+      depth: 100,
+      texture: 0,
+      minX: 0,
+      maxX: 0,
+      minY: 100,
+      maxY: 200,
+      minZ: 0,
+      maxZ: 0,
+      xdir: 0,
+      ydir: -1,
+      zdir: 0,
+      speed: 0.5
+    },
+    {
+      x: -100,
+      y: 200,
+      z: 0,
+      width: 100,
+      height: 100,
+      depth: 100,
+      texture: 0,
+      minX: 0,
+      maxX: 0,
+      minY: 0,
+      maxY: 0,
+      minZ: -100,
+      maxZ: 100,
+      xdir: 0,
+      ydir: 0,
+      zdir: 1,
+      speed: 0.5
+    },
+    {
+      x: -100,
       y: 200,
       z: -200,
       width: 100,
@@ -347,7 +404,45 @@ Level.prototype._generatePlatforms = function() {
       ydir: 0,
       zdir: 0,
       speed: 0
-    }
+    },
+    {
+      x: -85,
+      y: -65,
+      z: 225,
+      width: 70,
+      height: 30,
+      depth: 50,
+      texture: 0,
+      minX: 0,
+      maxX: 0,
+      minY: 0,
+      maxY: 0,
+      minZ: 0,
+      maxZ: 0,
+      xdir: 0,
+      ydir: 0,
+      zdir: 0,
+      speed: 0
+    },
+    {
+      x: -68,
+      y: -95,
+      z: 225,
+      width: 36,
+      height: 30,
+      depth: 50,
+      texture: 0,
+      minX: 0,
+      maxX: 0,
+      minY: 0,
+      maxY: 0,
+      minZ: 0,
+      maxZ: 0,
+      xdir: 0,
+      ydir: 0,
+      zdir: 0,
+      speed: 0
+    },
   ];
 
   var textures = [];
@@ -407,29 +502,29 @@ Level.prototype._generateSwitches = function() {
 
   var objs = [
     {
-      x: -200,
-      y: -145,
-      z: 200,
-      g: Gravity.UP
-    },
-    {
-      x: 200,
+      x: 0,
       y: -245,
-      z: -200,
+      z: 200,
       g: Gravity.UP
     },
     {
-      x: 200,
-      y: 245,
-      z: 200,
-      g: Gravity.DOWN
+      x: -100,
+      y: -55,
+      z: 180,
+      g: Gravity.RIGHT
     },
     {
-      x: -200,
-      y: 245,
+      x: 245,
+      y: 0,
       z: -200,
       g: Gravity.DOWN
     },
+    {
+      x: 245,
+      y: 200,
+      z: 200,
+      g: Gravity.DOWN
+    }
   ];
 
   var texArrow = loader.load('arrow.jpg');
