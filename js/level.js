@@ -106,7 +106,8 @@ Level.prototype._initScene = function() {
  * @returns {object}
  */
 Level.prototype._boundingBox = function() {
-  var geometry = new THREE.BoxGeometry(500, 500, 500);
+  var self = this;
+  var geometry = new THREE.BoxGeometry(levelSizes[self.level].width, levelSizes[self.level].height, levelSizes[self.level].depth);
   var material = new THREE.MeshPhongMaterial({
     color: 0x000000,
     side: THREE.DoubleSide,
