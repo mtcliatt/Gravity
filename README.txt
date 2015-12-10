@@ -1,4 +1,4 @@
-aIn Index.js, all code that configures the Lock Pointer API was taken from John McCutchan at html5rocks
+In Index.js, all code that configures the Lock Pointer API was taken from John McCutchan at html5rocks
 <http://www.html5rocks.com/en/tutorials/pointerlock/intro/>
 and Three.js's Lock Pointer API example found at
 <https://github.com/mrdoob/three.js/blob/master/examples/misc_controls_pointerlock.html>.
